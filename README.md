@@ -21,13 +21,6 @@ Cartoonify is a Python-based project that transforms ordinary images into cartoo
 - **Customizable Parameters:** Easily tweak parameters such as edge detection thresholds and smoothing levels.
 - **Simple Interface:** Designed for ease of use even for beginners in image processing.
 
-## Screenshots
-
-_Add screenshots of input vs. cartoonified output here. For example:_
-
-![Original Image](path/to/original_image.jpg)
-![Cartoonified Image](path/to/cartoonified_image.jpg)
-
 ## Installation
 
 1. **Clone the repository:**
@@ -86,7 +79,7 @@ The project is primarily built using Python and relies on the following librarie
 
 - [OpenCV](https://opencv.org/)
 - [NumPy](https://numpy.org/)
-- [Matplotlib](https://matplotlib.org/) _(for visualization, if used)_
+- [Matplotlib](https://matplotlib.org/) 
 
 Ensure you have these dependencies installed by using the provided `requirements.txt`.
 
