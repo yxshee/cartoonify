@@ -130,4 +130,11 @@ def _create_sample_dataset(face_dir, comic_dir, n_samples=100):
                     if dist < radius:
                         factor = 1 - (dist / radius)
                         cartoon_img[y, x] = np.clip(
-                            cartoon_img[y, x] * (1 - factor) + color
+                            cartoon_img[y, x] * (1 - factor) + color * factor, 0, 255
+                        ).astype(np.uint8)
+        
+        # Save cartoon image
+        comic_file = f"sample_{i:04d}.jpg"
+        Image.fromarray(cartoon_img).save(os.path.join(comic_dir, comic_file))
+    
+    print(f"Sample dataset created with {n_samples} image pairs.")

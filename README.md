@@ -1,3 +1,4 @@
+
 # Cartoonify
 
 Cartoonify is a Python-based project that transforms ordinary images into cartoon-like versions using computer vision techniques. This project leverages image processing algorithms such as edge detection, color quantization, and smoothing filters to produce an artistic rendition of the original image.
@@ -20,12 +21,6 @@ Cartoonify is a Python-based project that transforms ordinary images into cartoo
 - **Customizable Parameters:** Easily tweak parameters such as edge detection thresholds and smoothing levels.
 - **Simple Interface:** Designed for ease of use even for beginners in image processing.
 
-<br><p align="center">
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/0f96921e-e433-4c9c-90c2-f0cd6b551b50" />
-</p>
-
-<br>
-
 ## Installation
 
 1. **Clone the repository:**
@@ -46,18 +41,6 @@ Cartoonify is a Python-based project that transforms ordinary images into cartoo
 
    ```bash
    pip install -r requirements.txt
-   ```
-
-## Setup Instructions
-
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. Run the training script:
-   ```bash
-   python train.py
    ```
 
 ## Usage
