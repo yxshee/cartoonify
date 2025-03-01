@@ -5,135 +5,79 @@ import os
 os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
 
 
-class convblock(nn.Module):
-    def __init__(self, in_channels, out_channels,activation , conv_architecture , batch_norm, drop_out ,*args, **kwargs):
-        super(convblock, self).__init__()
-        
-        self.out_channels = out_channels
-        self.in_channels = in_channels
-        self.conv_architecture = conv_architecture
-        # print(self.conv_architecture)
-
-        self.activations =  nn.ModuleDict([
-            ['lrelu', nn.LeakyReLU(0.2)],
-            ['relu', nn.ReLU()],
-            ['tanh', nn.Tanh()]
-        ])
-
-# Module dict just does not works when taking keyword args
-        if self.conv_architecture == "Regular" : 
-            self.conv =  nn.Conv2d(self.in_channels, self.out_channels , kernel_size=4, stride=2, padding = 1, bias = False, *args, **kwargs)
-        
-        if self.conv_architecture == "Transposed" :
-            self.conv  = nn.ConvTranspose2d(self.in_channels, self.out_channels , kernel_size=4, stride=2, padding = 1 , bias = False, *args, **kwargs)
-
-
-        self.batch_norms = nn.ModuleDict([
-            ['Yes', nn.BatchNorm2d(self.out_channels)],
-            ['No', nn.Identity()]
-
-        ])
-
-        self.dropouts = nn.ModuleDict([
-            ['Yes', nn.Dropout(0.5)],
-            ['No', nn.Identity()],
-
-
-        ])
-        self.l1 = nn.Sequential(
-            self.conv,
-            self.batch_norms[batch_norm],
-            self.activations[activation],
-            self.dropouts[drop_out]
+class Block(nn.Module):
+    def __init__(self, in_channels, out_channels, down=True, act="relu", use_dropout=False):
+        super(Block, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 4, 2, 1, bias=False, padding_mode="reflect")
+            if down
+            else nn.ConvTranspose2d(in_channels, out_channels, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU() if act == "relu" else nn.LeakyReLU(0.2),
         )
 
+        self.use_dropout = use_dropout
+        self.dropout = nn.Dropout(0.5)
+        self.down = down
 
-    def forward(self,x):
-        x = self.l1(x)
-        return x
-    
+    def forward(self, x):
+        x = self.conv(x)
+        return self.dropout(x) if self.use_dropout else x
 
-    
+
 class Generator(nn.Module):
-    def __init__(self, img_channels, features):
-        super(Generator, self).__init__()
-        self.img_channels = img_channels
-
-        # --------------------------------------------------ENCODER# --------------------------------------------------#
-        self.e1 = convblock(in_channels=self.img_channels, out_channels=features,  padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
-
-        self.e2 = convblock(in_channels=features, out_channels=features * 2, padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
-
-        self.e3 = convblock(in_channels=features * 2, out_channels=features * 4, padding_mode = 'reflect', 
-             activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
-
-        self.e4 = convblock(in_channels=features * 4 ,out_channels=features * 8 , padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
-
-        self.e5 = convblock(in_channels=features * 8 ,out_channels=features * 8 , padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
+    def __init__(self, img_channels=3, features=64):
+        super().__init__()
+        self.initial_down = nn.Sequential(
+            nn.Conv2d(img_channels, features, 4, 2, 1, padding_mode="reflect"),
+            nn.LeakyReLU(0.2),
+        )
         
-        self.e6 = convblock(in_channels=features * 8 ,out_channels=features * 8 , padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
+        self.down1 = Block(features, features * 2, down=True, act="leaky", use_dropout=False)
+        self.down2 = Block(features * 2, features * 4, down=True, act="leaky", use_dropout=False)
+        self.down3 = Block(features * 4, features * 8, down=True, act="leaky", use_dropout=False)
+        self.down4 = Block(features * 8, features * 8, down=True, act="leaky", use_dropout=False)
+        self.down5 = Block(features * 8, features * 8, down=True, act="leaky", use_dropout=False)
+        self.down6 = Block(features * 8, features * 8, down=True, act="leaky", use_dropout=False)
         
-        self.e7 = convblock(in_channels=features * 8 ,out_channels=features * 8 , padding_mode = 'reflect', 
-            activation='lrelu', conv_architecture='Regular', batch_norm='Yes', drop_out='No')
-        # BotltleNeck Layer
-        self.e8 = convblock(in_channels=features * 8 ,out_channels=features * 8 ,
-            activation='relu', conv_architecture='Regular', batch_norm='No', drop_out='No')
+        self.bottleneck = nn.Sequential(
+            nn.Conv2d(features * 8, features * 8, 4, 2, 1),
+            nn.ReLU(),
+        )
 
-
-        # --------------------------------------------------DECODER# --------------------------------------------------#
-        self.d1 = convblock(in_channels=features * 8, out_channels=features * 8, 
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='Yes')
-
-        self.d2 = convblock(in_channels=features * 8 * 2 , out_channels=features * 8,
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='Yes')
-
-        self.d3 = convblock(in_channels=features * 8 * 2 , out_channels=features * 8,
-             activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='Yes')
-
-        self.d4 = convblock(in_channels=features * 8 * 2 , out_channels=features * 8,
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='No')
-
-        self.d5 = convblock(in_channels=features * 8 * 2,out_channels=features * 4 ,
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='No')
+        self.up1 = Block(features * 8, features * 8, down=False, act="relu", use_dropout=True)
+        self.up2 = Block(features * 8 * 2, features * 8, down=False, act="relu", use_dropout=True)
+        self.up3 = Block(features * 8 * 2, features * 8, down=False, act="relu", use_dropout=True)
+        self.up4 = Block(features * 8 * 2, features * 8, down=False, act="relu", use_dropout=False)
+        self.up5 = Block(features * 8 * 2, features * 4, down=False, act="relu", use_dropout=False)
+        self.up6 = Block(features * 4 * 2, features * 2, down=False, act="relu", use_dropout=False)
+        self.up7 = Block(features * 2 * 2, features, down=False, act="relu", use_dropout=False)
         
-        self.d6 = convblock(in_channels=features * 4 * 2 ,out_channels=features * 2 ,
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='No')
+        self.final_up = nn.Sequential(
+            nn.ConvTranspose2d(features * 2, img_channels, kernel_size=4, stride=2, padding=1),
+            nn.Tanh(),
+        )
+
+    def forward(self, x):
+        d1 = self.initial_down(x)
+        d2 = self.down1(d1)
+        d3 = self.down2(d2)
+        d4 = self.down3(d3)
+        d5 = self.down4(d4)
+        d6 = self.down5(d5)
+        d7 = self.down6(d6)
+        bottleneck = self.bottleneck(d7)
         
-        self.d7 = convblock(in_channels=features * 2 * 2 ,out_channels=features ,
-            activation='relu', conv_architecture='Transposed', batch_norm='Yes', drop_out='No')
-        # Final Layer
-        self.d8 = convblock(in_channels=features * 2 ,out_channels=self.img_channels ,
-            activation='tanh', conv_architecture='Transposed', batch_norm='No', drop_out='No')
-
+        up1 = self.up1(bottleneck)
+        up2 = self.up2(torch.cat([up1, d7], 1))
+        up3 = self.up3(torch.cat([up2, d6], 1))
+        up4 = self.up4(torch.cat([up3, d5], 1))
+        up5 = self.up5(torch.cat([up4, d4], 1))
+        up6 = self.up6(torch.cat([up5, d3], 1))
+        up7 = self.up7(torch.cat([up6, d2], 1))
         
-    def forward(self,  x):
-        # Encoding Imaege
-        e1 = self.e1(x)
-        e2 = self.e2(e1)
-        e3 = self.e3(e2)
-        e4 = self.e4(e3)
-        e5 = self.e5(e4)
-        e6 = self.e6(e5)
-        e7 = self.e7(e6)
-        # BottleNeck
-        e8 = self.e8(e7)
+        return self.final_up(torch.cat([up7, d1], 1))
 
-        # Decoding Image
-        d1 = self.d1(e8)
-        d2 = self.d2(torch.cat([d1, e7], 1 ))
-        d3 = self.d3(torch.cat([d2, e6], 1 ))
-        d4 = self.d4(torch.cat([d3, e5], 1 ))
-        d5 = self.d5(torch.cat([d4, e4], 1 ))
-        d6 = self.d6(torch.cat([d5, e3], 1 ))
-        d7 = self.d7(torch.cat([d6, e2], 1 ))
-        d8 = self.d8(torch.cat([d7, e1], 1 ))
-
-        return d8
 
 def test():
     x = torch.randn((1, 3, 256, 256))
