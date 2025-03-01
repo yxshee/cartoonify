@@ -1,0 +1,21 @@
+# Logs
+logs/
+*.log
+
+# Data
+data/
+
+# Weights
+weights/
+
+# Virtual Environments
+venv/
+ENV/
+env/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
