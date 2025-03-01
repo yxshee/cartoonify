@@ -22,7 +22,7 @@ Cartoonify is a Python-based project that transforms ordinary images into cartoo
 - **Simple Interface:** Designed for ease of use even for beginners in image processing.
 
 <br>
-<img width="480" height="480"  alt="image" src="https://github.com/user-attachments/assets/0f96921e-e433-4c9c-90c2-f0cd6b551b50" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/0f96921e-e433-4c9c-90c2-f0cd6b551b50" />
 <img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/f0c87486-a484-45e3-848c-976f650d153e" />
 
 <br>
