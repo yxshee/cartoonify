@@ -1,4 +1,3 @@
-
 # tree --dirsfirst --noreport -I 'Dataset*|wandb*|__pycache__|__init__.py|logs|SampleImages|List.md' > List.md 
 import datetime
 import torch
@@ -116,26 +115,39 @@ train_dataset = dataset.CartoonDataset(datadir='data', transforms = Trasforms)
 # Add Num workers
 train_loader   = DataLoader(train_dataset, batch_size = BATCH_SIZE, shuffle=True, drop_last=True)
 
+# Create weights directory if it doesn't exist
+os.makedirs("weights", exist_ok=True)
 
 if args.wandbkey :
     wandb_integration = True
     wandb.login(key = args.wandbkey)
     wandb.init(project = args.projectname,  entity=args.wandbentity, resume=True)
     print(wandb.run.name)
+else:
+    wandb_integration = False
+    print("Running without wandb integration")
 
 
 # Loading Generator
-if os.path.isdir(os.path.join(wandb.run.dir, GEN_CHECKPOINT)) and args.load_checkpoints:
+if wandb_integration and os.path.isdir(os.path.join(wandb.run.dir, GEN_CHECKPOINT)) and args.load_checkpoints:
     generator = torch.load(wandb.restore(GEN_CHECKPOINT).name)
 else:
-    generator = Generator(img_channels=IMG_CHANNELS, features=MAPS_GEN).to(DEVICE)
+    # Check if model exists in local weights directory
+    if os.path.exists(os.path.join("weights", GEN_CHECKPOINT)) and args.load_checkpoints:
+        generator = torch.load(os.path.join("weights", GEN_CHECKPOINT))
+    else:
+        generator = Generator(img_channels=IMG_CHANNELS, features=MAPS_GEN).to(DEVICE)
 
 
 # Loading Discriminator
-if os.path.isdir(os.path.join(wandb.run.dir, DISC_CHECKPOINT)) and args.load_checkpoints:
+if wandb_integration and os.path.isdir(os.path.join(wandb.run.dir, DISC_CHECKPOINT)) and args.load_checkpoints:
     discriminator = torch.load(wandb.restore(DISC_CHECKPOINT).name)
 else:
-    discriminator = Discriminator(img_channels = IMG_CHANNELS, features = MAPS_DISC).to(DEVICE)
+    # Check if model exists in local weights directory
+    if os.path.exists(os.path.join("weights", DISC_CHECKPOINT)) and args.load_checkpoints:
+        discriminator = torch.load(os.path.join("weights", DISC_CHECKPOINT))
+    else:
+        discriminator = Discriminator(img_channels = IMG_CHANNELS, features = MAPS_DISC).to(DEVICE)
 
 
 # weights Initialize
@@ -159,7 +171,7 @@ writer_fake = SummaryWriter(f"logs/fake")
 
 
 
-if args.wandbkey :
+if wandb_integration:
     wandb.watch(generator)
     wandb.watch(discriminator)
 
@@ -238,7 +250,7 @@ for epoch in range(1, NUM_EPOCHS+1):
                 images.append(img_grid_fake.cpu().detach().numpy())
 
 
-            if args.wandbkey:
+            if wandb_integration:
                 wandb.log({"Discriminator Loss": disc_loss.item(), "Generator Loss": gen_loss.item()})
                 wandb.log({"img": [wandb.Image(img_grid_fake, caption=step)]})
 
@@ -259,8 +271,8 @@ try:
     HTML(ani.to_jshtml())
     f = "animation{}.gif".format(datetime.datetime.now()).replace(":","")
 
-    ani.save(os.path.join(wandb.run.dir,f), writer=PillowWriter(fps=20)) 
+    if wandb_integration:
+        ani.save(os.path.join(wandb.run.dir,f), writer=PillowWriter(fps=20)) 
     ani.save(f, writer=PillowWriter(fps=20)) 
 except:
     pass
-    
