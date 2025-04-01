@@ -1,4 +1,5 @@
-<img width="238" alt="image" src="https://github.com/user-attachments/assets/74206206-1519-4075-959b-4fa75bd790c3" /># Cartoonify 🎨
+# Cartoonify 🎨
+
 
 **Cartoonify** is a Python-based application designed to transform your everyday photos into stunning cartoon-like images. By leveraging computer vision and image processing techniques such as edge detection, color quantization, and smoothing filters, Cartoonify provides artistic and visually appealing results.
 
