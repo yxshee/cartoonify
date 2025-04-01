@@ -1,11 +1,22 @@
-wandb>=0.13.0
-kaggle>=1.5.12
-tqdm>=4.64.0
-torch>=1.7.0
-torchvision>=0.8.1
-numpy>=1.19.0
-pillow>=8.0.0
-matplotlib>=3.3.0
-scikit-learn>=0.24.0
-tensorboard>=2.8.0
-opencv-python>=4.5.1
+# Experiment tracking and visualization
+wandb>=0.13.0          # Weights & Biases for experiment tracking
+tensorboard>=2.8.0     # TensorBoard for local visualization
+
+# Data acquisition
+kaggle>=1.5.12         # Kaggle API for dataset download
+
+# Progress display
+tqdm>=4.64.0           # Progress bars for long-running operations
+
+# Deep learning framework
+torch>=1.7.0           # PyTorch deep learning framework
+torchvision>=0.8.1     # Computer vision utilities for PyTorch
+
+# Scientific and data processing
+numpy>=1.19.0          # Numerical computing
+pillow>=8.0.0          # Image processing
+matplotlib>=3.3.0      # Plotting and visualization
+scikit-learn>=0.24.0   # Machine learning utilities
+
+# Computer vision
+opencv-python>=4.5.1   # OpenCV for image processing

@@ -1,21 +1,21 @@
-# Logs
+# Logging files
 logs/
 *.log
 
-# Data
+# Dataset files (potentially large)
 data/
 
-# Weights
+# Model weights (potentially large)
 weights/
 
-# Virtual Environments
+# Virtual Environment directories
 venv/
 ENV/
 env/
 
-# Compiled Python files
+# Python compilation artifacts
 *.pyc
 __pycache__/
 
-# Jupyter Notebook checkpoints
+# Jupyter Notebook temporary files
 .ipynb_checkpoints/
