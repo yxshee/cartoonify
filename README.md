@@ -1,110 +1,137 @@
+# Cartoonify 🎨
 
-# Cartoonify
-
-Cartoonify is a Python-based project that transforms ordinary images into cartoon-like versions using computer vision techniques. This project leverages image processing algorithms such as edge detection, color quantization, and smoothing filters to produce an artistic rendition of the original image.
-
-## Table of Contents
-
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-
-## Features
-
-- **Image Cartoonification:** Convert any image into a cartoon style by detecting edges and applying color smoothing.
-- **Customizable Parameters:** Easily tweak parameters such as edge detection thresholds and smoothing levels.
-- **Simple Interface:** Designed for ease of use even for beginners in image processing.
-
-## Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/yxshee/Cartoonify.git
-   cd Cartoonify
-   ```
-
-2. **Set up a virtual environment (optional but recommended):**
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install the required packages:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Usage
-
-After installation, you can run the cartoonification process from the command line or integrate the code into your own projects. For example:
-
-```bash
-python cartoonify.py --input path/to/input_image.jpg --output path/to/output_image.jpg
-```
-
-### Command-line Arguments
-
-- `--input`  
-  Specify the path to the input image.
-
-- `--output`  
-  Specify the path where the cartoonified image should be saved.
-
-- _Additional arguments_  
-  (If applicable, list other parameters such as edge threshold values or smoothing parameters.)
-
-## Project Structure
-
-```plaintext
-Cartoonify/
-├── cartoonify.py        # Main script for image cartoonification
-├── requirements.txt     # Python dependencies
-├── README.md            # Project documentation
-├── examples/            # Example images and outputs
-└── utils/               # Utility functions and modules
-```
-
-## Dependencies
-
-The project is primarily built using Python and relies on the following libraries:
-
-- [OpenCV](https://opencv.org/)
-- [NumPy](https://numpy.org/)
-- [Matplotlib](https://matplotlib.org/) 
-
-Ensure you have these dependencies installed by using the provided `requirements.txt`.
-
-## Contributing
-
-Contributions are welcome! If you have ideas for improvements, bug fixes, or new features, please fork the repository and open a pull request. Here’s how you can help:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Create a new Pull Request.
-
-Please follow the coding style and include appropriate tests with your contributions.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- Thanks to the contributors and maintainers of the libraries and tools used in this project.
-- Special mention to any tutorials or inspirations that helped shape this project.
-- [OpenCV](https://opencv.org/) community for excellent resources on image processing techniques.
+**Cartoonify** is a Python-based application designed to transform your everyday photos into stunning cartoon-like images. By leveraging computer vision and image processing techniques such as edge detection, color quantization, and smoothing filters, Cartoonify provides artistic and visually appealing results.
 
 ---
 
-Feel free to reach out if you have any questions or suggestions regarding the project!
+## 🚀 Features
+
+- **Simple Cartoonification:** Convert regular images into cartoon-like representations effortlessly.
+- **Adjustable Settings:** Customize the level of cartoon effect, including edge thickness, color depth, and smoothness.
+- **Batch Processing:** Handle multiple images simultaneously, improving efficiency and productivity.
+
+---
+
+## 🖼️ Sample Results
+
+Take a look at the transformation:
+
+| Original Image | Cartoonified Image |
+|----------------|--------------------|
+| ![Original](https://github.com/yxshee/cartoonify/assets/original_image.jpg) | ![Cartoonified](https://github.com/yxshee/cartoonify/assets/cartoonified_image.jpg) |
+
+---
+
+## 💻 Installation
+
+Follow these steps to set up Cartoonify on your machine:
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/yxshee/cartoonify.git
+```
+
+### Step 2: Navigate to the Project Directory
+
+```bash
+cd cartoonify
+```
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 📌 Usage
+
+### Prepare Your Images
+
+Place your images in the `data/input` folder.
+
+### Run the Cartoonify Script
+
+```bash
+python src/cartoonify.py --input_dir data/input --output_dir data/output
+```
+
+- `--input_dir`: Path to your original images.
+- `--output_dir`: Path to save cartoonified images.
+
+### View Your Results
+
+Cartoonified images will be saved in the `data/output` directory.
+
+---
+
+## 📂 Project Structure
+
+```
+cartoonify/
+├── data/
+│   ├── input/
+│   └── output/
+├── docs/
+├── src/
+│   ├── cartoonify.py
+│   └── utils.py
+├── tests/
+├── assets/
+├── requirements.txt
+└── README.md
+```
+
+- `data/input/`: Input images.
+- `data/output/`: Cartoonified output images.
+- `src/`: Source code.
+- `tests/`: Unit tests.
+- `docs/`: Documentation.
+- `assets/`: Images and media files for documentation.
+
+---
+
+## 📦 Dependencies
+
+Cartoonify requires the following libraries:
+
+- Python 3.x
+- OpenCV
+- NumPy
+- Matplotlib
+
+You can install these using the provided `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions and improvements are welcome!
+
+- Fork the repository.
+- Create your feature branch (`git checkout -b feature/AmazingFeature`).
+- Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+- Push to the branch (`git push origin feature/AmazingFeature`).
+- Open a Pull Request.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See [LICENSE](https://github.com/yxshee/cartoonify/blob/main/LICENSE) for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Thanks to the OpenCV community and open-source contributors.
+
+---
+
+**Enjoy cartoonifying your images! 🌟**
