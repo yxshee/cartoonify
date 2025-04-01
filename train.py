@@ -1,4 +1,15 @@
-# tree --dirsfirst --noreport -I 'Dataset*|wandb*|__pycache__|__init__.py|logs|SampleImages|List.md' > List.md 
+"""
+Training script for the Cartoonify GAN model.
+
+This script trains a GAN (Generative Adversarial Network) to transform
+regular face images into cartoon-style images. It uses a conditional GAN
+architecture with a U-Net generator and a PatchGAN discriminator.
+
+Usage:
+    python train.py [--wandbkey KEY] [--projectname NAME] [--wandbentity ENTITY]
+                    [--tensorboard BOOL] [--batch_size SIZE] [--epoch NUM]
+                    [--load_checkpoints BOOL]
+"""
 import datetime
 import torch
 from torch.utils.data import DataLoader
@@ -6,17 +17,6 @@ from torchvision.utils import make_grid
 from torchvision import transforms
 
 from torch.utils.tensorboard import SummaryWriter
-import torch.nn as nn 
-from torch import optim
-
-
-from src.data import dataset
-from src.data import prepare
-from src.models.discriminator import Discriminator
-from src.models.generator import Generator
-from src.utils import utils
-
-
 import sys
 import wandb
 import argparse
