@@ -10,6 +10,9 @@
 - **Adjustable Settings:** Customize the level of cartoon effect, including edge thickness, color depth, and smoothness.
 - **Batch Processing:** Handle multiple images simultaneously, improving efficiency and productivity.
 
+<img width="1279" alt="image" src="https://github.com/user-attachments/assets/f06655a9-94f9-429c-b141-51694a33cf77" />
+
+
 ---
 
 ## 🖼️ Sample Results
